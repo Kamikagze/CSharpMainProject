@@ -17,11 +17,19 @@ namespace UnitBrains.Player
         {
             float overheatTemperature = OverheatTemperature;
             ///////////////////////////////////////
-            // Homework 1.3 (1st block, 3rd module)
-            ///////////////////////////////////////           
-            var projectile = CreateProjectile(forTarget);
-            AddProjectileToList(projectile, intoList);
-            ///////////////////////////////////////
+            if (!_overheated)
+            {
+                IncreaseTemperature();
+                int t = GetTemperature();
+
+                for (int i = 0; i < t; i++)
+                {
+                    var projectile = CreateProjectile(forTarget);
+                    AddProjectileToList(projectile, intoList);
+                }
+            }
+            
+
         }
 
         public override Vector2Int GetNextStep()
@@ -46,7 +54,8 @@ namespace UnitBrains.Player
         public override void Update(float deltaTime, float time)
         {
             if (_overheated)
-            {              
+            {
+                Debug.Log("Я перегрет");      
                 _cooldownTime += Time.deltaTime;
                 float t = _cooldownTime / (OverheatCooldown/10);
                 _temperature = Mathf.Lerp(OverheatTemperature, 0, t);
@@ -54,6 +63,7 @@ namespace UnitBrains.Player
                 {
                     _cooldownTime = 0;
                     _overheated = false;
+                    Debug.Log("Я остыл");
                 }
             }
         }
